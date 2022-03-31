@@ -113,13 +113,13 @@ $$
 
 **Flow conservation equations**
 $$
-\sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ , 
+\sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 \quad \forall r \in R, \ \forall s \in S
 $$
 
 **Non-negativity constraints**
 $$
-f_{k}^{rs} \geq 0 \ , 
+f_{k}^{rs} \geq 0 \ ,
 \quad \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
 $$
 
@@ -135,7 +135,7 @@ $$
 
 **Travel time function of a path** is defined as sum of travel times of all links defining the path
 $$
-c_k^{rs} = \sum_{a \in A} \delta_{ak}^{rs} \cdot t_a(x_a), 
+c_k^{rs} = \sum_{a \in A} \delta_{ak}^{rs} \cdot t_a(x_a),
 \quad \forall \ k \in K_{rs}, \forall \ r \in R, \forall \ s \in S
 $$
 
@@ -175,101 +175,154 @@ $$
 \begin{array}{rll}
 \displaystyle \min_{\boldsymbol{x}} z(\boldsymbol{x}) = & \displaystyle \sum_{a \in A}\int_0^{x_a} t_a(\omega) \ \mathrm{d}\omega
 \\
-\text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, 
+\text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs},
 & \forall \ a \in A
 \\
-& \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ , 
+& \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
 \\
-& \displaystyle f_{k}^{rs} \geq 0 \ , 
+& \displaystyle f_{k}^{rs} \geq 0 \ ,
 & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
 \end{array}
 $$
 
 Regrading to the objective item $\displaystyle \int_0^{x_a} t_a(\omega) \ \mathrm{d}\omega$, if we employ the BPR travel time function $t_a(x_a) = t_a^0 \times \left[1.0 + \alpha_a (x_a / C_a)^{\beta_a} \right]$ (where $t_a^0, \alpha_a, \beta_a, C_a$ are constants), then we have
 $$
-\int_0^{x_a} t_a(\omega) \ \mathrm{d}\omega 
+\int_0^{x_a} t_a(\omega) \ \mathrm{d}\omega
 = \left. \left[t_a^0 \, \omega + \frac{t_a^0 \ \alpha_a}{\beta_a+1} \left( \frac{\omega ^{\ \beta_a + 1}}{C_a^{\beta_a}} \right)  + \text{constant}\right] \right|_{0}^{x_a}
-= t_a^0 \, x_a + \frac{t_a^0 \ \alpha_a}{\beta_a+1} \left( \frac{x_a ^{\ \beta_a + 1}}{C_a^{\beta_a}} \right) 
+= t_a^0 \, x_a + \frac{t_a^0 \ \alpha_a}{\beta_a+1} \left( \frac{x_a ^{\ \beta_a + 1}}{C_a^{\beta_a}} \right)
 $$
 
-Fomulation of $z(\boldsymbol{f})$ in terms of **path flows** $f^{rs}_k$. Equivalence with DUE conditions: 
+Useful Derivatives
+$$
+\begin{align*}
+\frac{\partial z(\boldsymbol{x})}{\partial x_a} &
+  = \frac{\partial z(\boldsymbol{f})}{\partial x_a}
+  = t_a(x_a), \quad \forall \, a \in A
+\\
+\frac{\partial z(\boldsymbol{x})}{\partial \boldsymbol{x}} &
+  = \sum_{a \in A} t_a(x_a)
+\\
+\frac{\partial x_a}{\partial f_k^{rs}} &
+  = \delta_{ak}^{rs}
+\\
+\frac{\partial z(\boldsymbol{f})}{\partial f^{rs}_k} &
+  = \sum_{a \in A} \frac{\partial z(\boldsymbol{f})}{\partial x_a} \frac{\partial x_a}{\partial f_k^{rs}}
+  = \sum_{a \in A} t_a(x_a) \, \delta_{ak}^{rs}
+\\
+\frac{\partial \, t_a(x_a)}{\partial f^{rs}_{k}} &
+  = \frac{\partial \, t_a(x_a)}{\partial x_a} \frac{\partial \, x_a}{\partial f^{rs}_{k}}
+  = t_a'(x_a) \, \delta_{ak}^{rs}
+\end{align*}
+$$
+
+
+### 5.2 Equivalent Fomulation with respect to Path Flows
+
+Fomulation of $z(\boldsymbol{f})$ in terms of **path flows** $f^{rs}_k$. Equivalence with DUE conditions:
 $$
 \begin{array}{rll}
-\displaystyle \min_{\boldsymbol{f}} z(\boldsymbol{f}) = 
+\displaystyle \min_{\boldsymbol{f}} z(\boldsymbol{f}) =
   & \displaystyle \sum_{a \in A} \int_0 ^{
     \textstyle { \sum \limits_{r \in R}} \ {\sum \limits_{s \in S}} \ {\sum \limits_{k \in K_{rs}}
-    } \delta_{ak}^{rs} \cdot f_{k}^{rs} } 
+    } \delta_{ak}^{rs} \cdot f_{k}^{rs} }
 t_a(\omega) \ \mathrm{d} \omega
 \\
-\text{s.t.} \quad & \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ , 
+\text{s.t.} \quad & \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
 \\
-& \displaystyle f_{k}^{rs} \geq 0 \ , 
+& \displaystyle f_{k}^{rs} \geq 0 \ ,
 & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
 \end{array}
 $$
 
-### 5.2 Proof using KKT conditions
+### 5.3 Proof using KKT conditions
 
 (1) Build the Lagrangian function for the equivalent minimization model
 $$
-L \left(\boldsymbol{f}, \boldsymbol{v}, \boldsymbol{\nu} \right)
+L \left(\boldsymbol{f}, \boldsymbol{u}, \boldsymbol{\nu} \right)
 = z(\boldsymbol{f}) + \sum_{r \in R} \sum_{s \in S} u_{rs} \left(q_{rs} - \sum_{k \in K_{rs}}f_{k}^{rs} \right)
 + \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \nu^{kr}_{s} \cdot \left( - f_{k}^{rs} \right)
 $$
-where $u_{rs}$ and $\nu^{kr}_{s}$ are Lagrangian multipliers. 
+where $u_{rs}$ and $\nu^{kr}_{s}$ are Lagrangian multipliers.
 
 (2) Assume that $\left\{ f_{k}^{*rs} \ | \ \forall  k \in K_{rs}, r \in R, s \in S \right\}$ is the optimal solution. There exist Lagrangian multipliers $\left\{u_{rs}^* \in R \ | \  r \in R, s \in S\right\}$, $\left\{ \nu^{*rs}_k \geq 0 \ | \ \forall  k \in K_{rs}, r \in R, s \in S \right\}$ such that:
 
 $$\begin{array}{lrl}
-\displaystyle \frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} - u_{rs}^* - \nu^{*rs}_k =0, 
+\displaystyle \frac{\partial L \left(\boldsymbol{f}^*, \boldsymbol{u}, \boldsymbol{\nu} \right)}{\partial f^{*rs}_k} = \frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} - u_{rs}^* - \nu^{*rs}_k =0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad \nu^{*rs}_k =  c^{*rs}_k - u^{*rs}_k
 \\
 \nu^{*rs}_k \geq 0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad c^{*rs}_k \geq u^{*rs}_k
 \\
-\nu^{*rs}_k \times (-f^{*rs}_k) = 0,
+\displaystyle \nu^{*rs}_k \cdot \frac{\partial L \left(\boldsymbol{f}^*, \boldsymbol{u}, \boldsymbol{\nu} \right)}{\nu^{*rs}_k} = \nu^{*rs}_k \times (-f^{*rs}_k) = 0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad (c^{*rs}_k - u^{*rs}_k) f^{*rs}_k = 0
 \\
-\displaystyle \sum_{k \in K_{rs}} f^{*rs}_k = q_{rs} 
+\displaystyle \sum_{k \in K_{rs}} f^{*rs}_k = q_{rs}
   & \forall \ r \in R, \ \forall \ s \in S
 \\
-f^{*rs}_k >0, 
+f^{*rs}_k \geq 0,
   & \forall \ r \in R, \ \forall \ s \in S
+\end{array}$$
+
+Then, we can get
+$$\begin{array}{lr}
+  \nu^{*rs}_k =  c^{*rs}_k - u^{*rs}_k \\
+  \nu^{*rs}_k + u^{*rs}_k = c^{*rs}_k \geq u^{*rs}_k \\
+  (c^{*rs}_k - u^{*rs}_k) f^{*rs}_k = 0
 \end{array}$$
 
 where:
 $$
-\frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} = c^{*rs}_k= \sum_{a \in A} t_a (x_a^*) \ \delta^{rs}_{ak}
+\frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k}
+= \sum_{a \in A} t_a (x_a^*) \ \delta^{rs}_{ak}
+= c^{*rs}_k
 $$
 
-Regarding to $\dfrac{\partial z(\boldsymbol{f})}{f^{rs}_k}$, we have:
-$$
-\frac{\partial z(\boldsymbol{f})}{\partial f^{rs}_k} 
-= {\sum_{a \in A}} \left[ \frac{\partial z_a(\boldsymbol{f})}{\partial f^{rs}_k} \right]
-= {\sum_{a \in A}} \left[ \frac{\partial z_a(\boldsymbol{f})}{\partial x_a} \frac{\partial x_a}{\partial f^{rs}_k} \right] 
-= {\sum_{a \in A}} \left[ t_a(x_a) \, \delta_{ak}^{rs} \right]
-$$
+### 5.4 Situations of Solution
 
-### 5.3 Situations of Solution
+#### (1) **Uniqueness** of DUE **Link Flow** Solution
 
-**Uniqueness** of DUE **Link Flow** Solution: The Beckmann's formulation in terms of link flows, $z(\boldsymbol{x})$, is a **strictly convex** minimization problem, and its Hessian matrix $\nabla^2 z(\boldsymbol{x})$ is **positive definite**.
+The Beckmann's formulation in terms of link flows, $z(\boldsymbol{x})$, is a **strictly convex** minimization problem, and its Hessian matrix $\nabla^2 z(\boldsymbol{x})$ is **positive definite**.
 
 The Hessian matrix of objective function $z(\boldsymbol{x})$:
 $$
+\nabla z(\boldsymbol{x}) = \begin{bmatrix}
+  t_1(x_1) \\
+  t_2(x_2) \\
+  \vdots   \\
+  t_a(x_a)
+\end{bmatrix}
+\qquad \qquad
 \nabla^2 z(\boldsymbol{x}) = \begin{bmatrix}
-t_1'(x_1) & 0 & \cdots & 0 \\
-0 & t_2'(x_2) & \cdots & 0 \\
-\vdots & \vdots & \ddots & 0 \\
-0 & 0  & \cdots & t_a'(x_a)
+  t_1'(x_1) & 0 & \cdots & 0 \\
+  0 & t_2'(x_2) & \cdots & 0 \\
+  \vdots & \vdots & \ddots & 0 \\
+  0 & 0  & \cdots & t_a'(x_a)
 \end{bmatrix}
 $$
 
-**Non-uniqueness** of DUE **Path Flow** Solution: The Beckmann's formulation in terms of path flows, $z(\boldsymbol{f})$,  is a **convex but not strictly convex** programming problem
+#### (2) **Non-uniqueness** of DUE **Path Flow** Solution
+
+The Beckmann's formulation in terms of path flows, $z(\boldsymbol{f})$,  is a **convex but not strictly convex** programming problem.
+
+Firstly, consider the first-order derivative of function $z(\boldsymbol{f})$:
+$$
+\nabla z(\boldsymbol{f}) = \begin{bmatrix}
+  \vdots   \\
+  \sum_{a \in A} t_a(x_a) \, \delta_{ak}^{rs}\\
+  \vdots   \\
+\end{bmatrix}
+$$
+Where a set $(r,s,k)$ indicates a unique column index of the vector $\nabla z(\boldsymbol{f})$. Then, the $\big[(r,s,k), (r',s',k') \big]$ entry of Hessian matrix $\nabla^2 z(\boldsymbol{x})$ is:
+
+$$
+\frac{\partial}{\partial f^{r's'}_{k'}} \frac{\partial z(\boldsymbol{f})}{\partial f^{rs}_k}
+= \frac{\partial}{\partial f^{r's'}_{k'}} \left[ \sum_{a \in A} t_a(x_a) \, \delta_{ak}^{rs} \right]
+= \sum_{a \in A} \delta_{ak}^{rs} \left[\frac{\partial \, t_a(x_a)}{\partial f^{r's'}_{k'}} \right]
+= \sum_{a \in A} \delta_{ak}^{rs} \, \delta_{ak'}^{r's'} t_{a}^{\prime}(x_a)
+$$
+Thus, we can get $\nabla^2 z(\boldsymbol{x})$ is a symmetric matrix, however, we can not guarantee Hessian matrix $\nabla^2 z(\boldsymbol{x})$ always is positive definite.
 
 ## 6. Heuristic Equilibration Techniques
 
@@ -285,9 +338,9 @@ $$
 
 - **Step 2:** Traffic flow on a link is calculated by adding traffic flows of all paths using the link.
 
-### 6.2 Capacity Restraint Method 
+### 6.2 Capacity Restraint Method
 
-#### (1) Simple Capacity Restraint Method 
+#### (1) Simple Capacity Restraint Method
 
 Capacity restraint method involves a repetitive all-or-nothing assignment in which the travel times resulting from the previous assignment are used in the current iteration.
 
@@ -301,13 +354,13 @@ Capacity restraint method involves a repetitive all-or-nothing assignment in whi
 
 This method is difficult to converge.
 
-#### (2) FHWA's Capacity Restraint Method 
+#### (2) FHWA's Capacity Restraint Method
 
-U.S. Federal Highway Administration (FHWA) refined this method. 
+U.S. Federal Highway Administration (FHWA) refined this method.
 
-- First, instead of using the travel time obtained in the previous iteration for the new loading, a combination of the last two travel times obtained is used. This introduces a "smoothing" effect. 
+- First, instead of using the travel time obtained in the previous iteration for the new loading, a combination of the last two travel times obtained is used. This introduces a "smoothing" effect.
 
-- Second, the failure to converge is recognized explicitly and the algorithm is terminated after a given number of iterations, $N$. 
+- Second, the failure to converge is recognized explicitly and the algorithm is terminated after a given number of iterations, $N$.
 
 - The equilibrium flow pattern is then taken to be the average flow for each link over the last four iterations (obviously, $N$ should never be less than 4).
 
@@ -343,17 +396,13 @@ Incremental assignment method is to assign a portion of the origin-destination m
 
 ### 7.1 Frank-Wolfe Method
 
-- The Frank-Wolfe method was made popular in traffic assignment by the work of LeBlanc et al (1975).
-  
-  LeBlanc et al.(1975) An efficient approach to solving the road network traffic assignment problem. Transportation Research, Vol. 9, 309-318.
+- The Frank-Wolfe method was made popular in traffic assignment by the work of LeBlanc et al (1975) (Ref. [8]).
 
-- It was validated by Florian and Nguyen (1976)
-  
-  Florian, M. and Nguyen, S. (1976) An application and validation of equilibrium trip assignment methods. Transportation Science, Vol. 10, 374-390.
+- It was validated by Florian and Nguyen (1976) (Ref. [9]).
 
 - It is now the most common approach used by transportation planning software packages to DUE traffic assignment problems
 
-  Transportation Planning Software Package: Visum, EMME, TransCAD
+  - Transportation Planning Software Package: Visum, EMME, TransCAD
 
 #### Algorithmic Steps
 
@@ -369,16 +418,16 @@ $$
 $$
 where $\{y_a^{(n)} - x_a^{(n)}, \forall a \in A \}$ is descent direction.
 
-**Step 4: (Move) :** 
+**Step 4: (Move) :**
 $$
 x_a^{(n+1)} = x_a^{(n)} + \alpha_n \left( y_a^{(n)} - x_a^{(n)} \right), \forall a \in A
 $$
 
-**Step 5: (Convergence test) :** If a convergence criterion is met, then stop. The current solution, 
+**Step 5: (Convergence test) :** If a convergence criterion is met, then stop. The current solution,
 $$
 \{x_a^{(n+1)}, a \in A \} \ ,
 $$
-is the set of equilibrium flows. 
+is the set of equilibrium flows.
 
 Otherwise set $n := n+1$ and go to **Step 1**.
 
@@ -403,15 +452,9 @@ $$
 
 ### 7.2 Method of Successive Average
 
-- The MSA was tailored by Sheffi and Powell (1982) for conducting traffic assignment
+- The MSA was tailored by Sheffi and Powell (1982) (Ref.[10]) for conducting traffic assignment
 
-  Sheffi Y and Powell WB (1982) An algorithm for the equilibrium assignment problem with random link times. Networks 12(2):191–207.
-
-- The global convergence of MSA was investigated by Robbins and Monro (1951) and Blum (1954)
-
-  Robbins H, Monro S (1951) A stochastic approximation method. Statistics:102–109.
-
-  Blum JR (1954) Multidimensional Stochastic Approximation Methods. The Annals of Mathematical Statistics 25(4):737–744.
+- The global convergence of MSA was investigated by Robbins and Monro (1951) (Ref.[11]) and Blum (1954)  (Ref.[12])
 
 #### Algorithmic Steps
 
@@ -426,16 +469,16 @@ $$
 \alpha_n = \frac{1}{n}
 $$
 
-**Step 4: (Move) :** 
+**Step 4: (Move) :**
 $$
 x_a^{(n+1)} = x_a^{(n)} + \alpha_n \left( y_a^{(n)} - x_a^{(n)} \right), \forall a \in A
 $$
 
-**Step 5: (Convergence test) :** If a convergence criterion is met, then stop. The current solution, 
+**Step 5: (Convergence test) :** If a convergence criterion is met, then stop. The current solution,
 $$
 \{x_a^{(n+1)}, a \in A \} \ ,
 $$
-is the set of equilibrium flows. 
+is the set of equilibrium flows.
 
 Otherwise set $n := n+1$ and go to **Step 1**.
 
@@ -445,21 +488,13 @@ Otherwise set $n := n+1$ and go to **Step 1**.
 
 ### 7.3 Other DUE Traffic Assignment Methods
 
-- Path-based Algorithm
+- Path-based Algorithm: Dial (2006, Ref.[13])
 
-  Dial, R. B.(2006) A path-based user-equilibrium traffic assignment that obviates path storage and enumeration Transportation Research, Vol. 40B, 917-936.
+- Origin-based Algorithm: Bar-Gera (2002, Ref.[14])
 
-- Origin-based Algorithm
+- Path-based Gradient Projection Algorithm: Jayakrishnan et al. (1994, Ref.[15])
 
-  Bar-Gera Hillel (2002) Origin-based algorithm for the traffic assignment problem. Transportation Science, Vol. 36, 398-417.
-
-- Path-based Gradient Projection Algorithm
-
-  Jayakrishnan et al. (1994) A faster path-based algorithm for traffic assignment. Transportation Research Record, Vol. 1443, 75-83.
-
-- Benchmark Examples
-  
-  Transportation Networks, github, [website](https://github.com/bstabler/TransportationNetworks)
+- Benchmark Examples: Transportation Networks, github, [website](https://github.com/bstabler/TransportationNetworks)
 
 
 ## Reference
@@ -478,4 +513,20 @@ Otherwise set $n := n+1$ and go to **Step 1**.
 
 [7] M. Beckmann, C. B. McGuire, C. B. Winsten, "Chapter 3 Equilibrium", in *Studies in the Economics of Transportation*, New Haven: Yale University Press, 1956. Free download from this [website](https://cowles.yale.edu/sites/default/files/files/pub/misc/specpub-beckmann-mcguire-winsten.pdf)
 
-[] Transportation Networks for Research Core Team, *Transportation Networks for Research*, March, 23, 2022, [website](https://github.com/bstabler/TransportationNetworks).
+[8] L. J. LeBlanc, E. K. Morlok, and W. P. Pierskalla, "An efficient approach to solving the road network equilibrium traffic assignment problem", *Transportation Research*, vol. 9, no. 5, pp. 309–318, Oct. 1975, doi: 10.1016/0041-1647(75)90030-1.
+
+[9] M. Florian and S. Nguyen, "An Application and Validation of Equilibrium Trip Assignment Methods", *Transportation Science*, vol. 10, no. 4, pp. 374–390, Nov. 1976, doi: 10.1287/trsc.10.4.374.
+
+[10] Y. Sheffi and W. B. Powell, "An algorithm for the equilibrium assignment problem with random link times", *Networks*, vol. 12, no. 2, pp. 191–207, 1982, doi: 10.1002/net.3230120209.
+
+[11] H. Robbins and S. Monro, "A Stochastic Approximation Method", *Ann. Math. Statist.*, vol. 22, no. 3, pp. 400–407, Sep. 1951, doi: 10.1214/aoms/1177729586.
+
+[12] J. R. Blum, "Multidimensional Stochastic Approximation Methods", *Ann. Math. Statist.*, vol. 25, no. 4, pp. 737–744, Dec. 1954, doi: 10.1214/aoms/1177728659.
+
+[13] R. B. Dial, "A path-based user-equilibrium traffic assignment algorithm that obviates path storage and enumeration", *Transportation Research Part B: Methodological*, vol. 40, no. 10, pp. 917–936, Dec. 2006, doi: 10.1016/j.trb.2006.02.008.
+
+[14] H. Bar-Gera, "Origin-Based Algorithm for the Traffic Assignment Problem", *Transportation Science*, vol. 36, no. 4, pp. 398–417, Nov. 2002, doi: 10.1287/trsc.36.4.398.549.
+
+[15] R. Jayakrishnan, W. K. Tsai, Joseph N Prashker, and S. Rajadyaksha, "A Faster Path-Based Algorithm for Traffic Assignment", *Transportation Research Record*, no. 1443, pp. 75–83, 1994.
+
+[16] Transportation Networks for Research Core Team, *Transportation Networks for Research*, March, 23, 2022, [website](https://github.com/bstabler/TransportationNetworks).

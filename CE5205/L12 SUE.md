@@ -82,9 +82,55 @@ $$
 
 ### 2.1 Logit-based SUE Conditions
 
+**Assume :**
+- random terms $\{\xi_{k}^{rs} \ | \ k \in K_{rs}, r \in R, s \in S\}$ are **Independent and Identical Distributed** random variables following **Gumbel distribution** with parameters $\eta=0$ and $\mu = \theta$
 
+Thus, we have:
+
+$$
+\begin{align*}
+& \Pr \big(c_{k}^{rs}(\boldsymbol{f}) + \xi_{k}^{rs} \leq c_{l}^{rs}(\boldsymbol{f}) + \xi_{l}^{rs}, \ \forall \ l \neq k, l \in K_{rs} \big)
+= \frac{
+    \exp \big[-\theta \,  c_{k}^{rs}(\boldsymbol{f}) \big]
+  }{
+    \displaystyle \sum_{l \in K_{rs}} \exp \big[-\theta \,  c_{l}^{rs}(\boldsymbol{f}) \big]
+  }
+\\
+& \qquad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+\end{align*}
+$$
+
+Thus, The logit-based SUE conditions can be **analytically** expressed by
+$$
+f^{rs}_k = q_{rs} \cdot \frac{
+    \exp \big[-\theta \,  c_{k}^{rs}(\boldsymbol{f}) \big]
+  }{
+    \displaystyle \sum_{l \in K_{rs}} \exp \big[-\theta \,  c_{l}^{rs}(\boldsymbol{f}) \big]
+  }
+\qquad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
 
 ### 2.2 Probit-Based SUE Conditions
+
+**Assume :**
+- random terms $\{\xi_{k}^{rs} \ | \ k \in K_{rs}, r \in R, s \in S\}$ follow a multivariant normal distribution with a mean vector $\boldsymbol{\mu} = \boldsymbol{0}$ and a covariance matrix $\mathbf{\Sigma}$
+
+The joint probability density function:
+$$
+\phi(\boldsymbol{x} \ | \ \boldsymbol{\mu}, \mathbf{\Sigma})
+= \left( \frac{1}{2 \pi} \right)^{\frac{n}{2}} |\mathbf{\Sigma}|^{-\frac{1}{2}} \exp \left[ -\frac{1}{2} (\boldsymbol{x}-\boldsymbol{\mu})^{\top} \mathbf{\Sigma}^{-1} (\boldsymbol{x}-\boldsymbol{\mu}) \right],
+\qquad - \infty < \boldsymbol{x} < + \infty
+$$
+where $n$ is the total number of paths in the network.
+
+The probit-based SUE conditions can be expressed by
+$$
+f_{k}^{rs} = q_{rs} \Pr \big(c_{k}^{rs}(\boldsymbol{f}) + \xi_{k}^{rs} \leq c_{l}^{rs}(\boldsymbol{f}) + \xi_{l}^{rs},
+\quad \ \forall \ l \neq k, l \in K_{rs} \big)
+\forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
+and this model doesn't have a analytical expression.
+
 
 ## 3. Fisk's Model
 
@@ -138,43 +184,118 @@ where $u_{rs}$ and $\nu^{kr}_{s}$ are Lagrangian multipliers.
 
 (2) Assume that $\left\{ f_{k}^{*rs} \ | \ \forall  k \in K_{rs}, r \in R, s \in S \right\}$ is the optimal solution. There exist Lagrangian multipliers $\left\{u_{rs}^* \in R \ | \  r \in R, s \in S\right\}$, $\left\{ \nu^{*rs}_k \geq 0 \ | \ \forall  k \in K_{rs}, r \in R, s \in S \right\}$ such that:
 
-$$\begin{array}{lrl}
-\displaystyle \frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} - u_{rs}^* - \nu^{*rs}_k =0,
+$$\begin{array}{lr}
+\displaystyle \frac{\partial L \left(\boldsymbol{f}^*, \boldsymbol{u}, \boldsymbol{\nu} \right)}{\partial f^{*rs}_k} = \frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} - u_{rs}^* - \nu^{*rs}_k =0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad \nu^{*rs}_k =  c^{*rs}_k - u^{*rs}_k
 \\
 \nu^{*rs}_k \geq 0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad c^{*rs}_k \geq u^{*rs}_k
 \\
-\nu^{*rs}_k \times (-f^{*rs}_k) = 0,
+\displaystyle \nu^{*rs}_k \cdot \frac{\partial L \left(\boldsymbol{f}^*, \boldsymbol{u}, \boldsymbol{\nu} \right)}{\nu^{*rs}_k} = \nu^{*rs}_k \times (-f^{*rs}_k) = 0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
-  & \quad \Rightarrow \quad (c^{*rs}_k - u^{*rs}_k) f^{*rs}_k = 0
 \\
 \displaystyle \sum_{k \in K_{rs}} f^{*rs}_k = q_{rs}
   & \forall \ r \in R, \ \forall \ s \in S
 \\
-f^{*rs}_k >0,
-  & \forall \ r \in R, \ \forall \ s \in S
+f^{*rs}_k \geq 0,
+  & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
 \end{array}$$
 
-Then we can get
+Then, we can get
 $$
 \begin{align*}
-\frac{f^{*rs}_{k}}{q_{rs}} = \frac{\exp(-\theta C_{k}^{*rs})}{\sum_{r \in R}\sum_{s \in S} \exp(-\theta)}
+& \frac{f^{*rs}_{k}}{q_{rs}} = \frac{\exp(-\theta \, C_{k}^{*rs})}{\displaystyle \sum_{l \in K^{rs}} \exp(-\theta \, C_l^{*rs})}
+\\
+& \nu_{k}^{*rs} = 0
 \end{align*}
 $$
-d
+
 where:
 $$
-\frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k} = c^{*rs}_k= \sum_{a \in A} t_a (x_a^*) \ \delta^{rs}_{ak}
+\frac{\partial z(\boldsymbol{f})}{f^{rs}_k}
+= \frac{1}{\theta} \ln (f_{k}^{rs}) + \sum_{a \in A} t_a (x_a) \ \delta^{rs}_{ak}
+= \frac{1}{\theta} \ln (f_{k}^{rs}) + c_k^{rs}
 $$
 
 ## 4. Stochastic User Equilibrium Loading Methods
 
+### 4.1 SUE Loading Methods
+
+A SUE loading method aims to find a SUE link flow solution when the deterministic link or path travel times are given. Namely: for the given link travel time pattern $\{t_a, a \in A\}$, we need to obtain fulfiling the following SUE conditions:
+$$
+x^*_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \, f_{k}^{*rs},
+\ a \in A
+\quad \text{and} \quad
+f_{k}^{*rs}, \ \quad f_{k}^{*rs}, \ \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
+fulfiling the following SUE conditions:
+$$
+f_{k}^{rs} = q_{rs} \Pr \big(c_{k}^{rs}(\boldsymbol{f}) + \xi_{k}^{rs} \leq c_{l}^{rs}(\boldsymbol{f}) + \xi_{l}^{rs}, \ \forall \ l \neq k, l \in K_{rs} \big),
+\quad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
+
+where:
+$$
+c_{k}^{rs} = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \, t_a,
+\quad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
+and $t_a$ is a fixed value.
+
+### 4.2 Logit-based SUE Loading Method
+
+### 4.3 Probit-based SUE Loading Method
+
+### 4.4 Monte Carlo Simulation based SUE Loading Method
+
+**Step 0: (Initialization)** Set $n:=1$.
+
+**Step 1: (Sampling)** Sample $T_a^n$ from random variable $T_a$ for each link $a \in A$.
+
+**Step 2: (All-or-nothing assignment)** Based on $\{T_a^n, \ a \in A\}$, assign $\{q_{rs}\}$ to the shortest path connecting each O-D pair $r\text{-}s$. This step yields the set of **link flows** $\{X_a^n, \ a \in A\}$
+
+**Step 3: (Flow averaging)** Let
+$$
+x_a^n = \frac{1}{n} \big[(n-1) x_a^{n-1} + X_a^n \big], \quad \forall a \in A
+$$
+
+**Step 4: (Stopping test)** Let maximum relative error
+$$
+\sigma := \max_{a \in A} \left\{ \frac{|x_a^n - x_{a}^{n-1}|}{x_a^n} \right\}
+$$
+If $n>1$ and $\sigma \leq \varepsilon$, stop, and the solution is $\{x_a^n, \ a \in A\}$. Otherwise, set $n:= n+1$ and go to **Step 1**.
+
+Where $\varepsilon$ is the stopping tolerance, it is a given constant.
+
+### 4.5 MSA Algorithmic Steps
+
+**Step 0 (Initialization) :** Perform an SUE loading method based on $\{t_a = t_a(0), a \in A\}$. This yields $\{x_a^{(1)}, a \in A \}$. Set counter $n:=1$
+
+**Step 1: (Update) :** Set $t_a^{(n)} = t_a(x_a^{(n)}), \forall \, a \in A$
+
+**Step 2: (Direction finding) :** Perform an SUE loading based on $\left\{t_a^{(n)}, a \in A \right\}$. This yields a set of (auxiliary) flows $\left\{y_a^{(n)}, a \in A \right\}$
+
+**Step 3: (Move) :**
+$$
+x_a^{(n+1)} = x_a^{(n)} + \frac{1}{n} \left( y_a^{(n)} - x_a^{(n)} \right), \ \forall a \in A
+$$
+
+**Step 4: (Convergence test) :** If a convergence criterion is met, then stop. The current solution,
+$$
+\{x_a^{(n+1)}, a \in A \} \ ,
+$$
+is the set of equilibrium flows.
+
+Otherwise set $n := n+1$ and go to **Step 1**.
+
+The convergence criterion is:
+$$
+\frac{\displaystyle \sqrt{\sum_{a \in A}\left(x_{a}^{(n+1)}-x_{a}^{(n)}\right)^{2}}}{\displaystyle \sum_{a \in A} x_{a}^{(n)}} \leq \varepsilon
+$$
 
 ## References
 
-[1] C. Fisk, "Some developments in equilibrium traffic assignment", *Transportation Research Part B: Methodological*, vol. 14, no. 3, pp. 243–255, Sep. 1980, doi: 10.1016/0191-2615(80)90004-1.
+[1] J. de D. Ortúzar S. and L. G. Willumsen, "Chapter 11 Equilibrium and Dynamic Assignment", in *Modelling Transport, Fourth edition*. Chichester, West Sussex, United Kingdom: John Wiley & Sons, 2011.
 
-[2]
+[2] Y. Sheffi, "Section 10.1-10.2, Chapter 11", in *Urban Transportation Networks: Equilibrium Analysis with Mathematical Programming Methods*, Englewood Cliffs, N.J: Prentice-Hall, 1984. Free download from this [website](https://sheffi.mit.edu/book/urban-transportation-networks)
+
+[3] C. Fisk, "Some developments in equilibrium traffic assignment", *Transportation Research Part B: Methodological*, vol. 14, no. 3, pp. 243–255, Sep. 1980, doi: 10.1016/0191-2615(80)90004-1.
