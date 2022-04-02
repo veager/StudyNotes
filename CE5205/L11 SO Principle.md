@@ -10,7 +10,7 @@ Average journey travel time:
 
 $$
 \frac{
-  \displaystyle \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}}\left[c_{k}^{r s} \times f_{k}^{r s}\right]
+  \displaystyle \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}}\left(c_{k}^{r s} \times f_{k}^{r s}\right)
   }{
   \displaystyle \sum_{r \in R} \sum_{s \in S} q_{r s}
 }
@@ -18,7 +18,17 @@ $$
 
 Total system travel time
 $$
-\tilde{z}(\boldsymbol{x})=\sum_{a \in A}\left[t_{a}\left(x_{a}\right) \times x_{a}\right]
+\begin{align*}
+\tilde{z}(\boldsymbol{x}) &= \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}} \left(c_{k}^{r s} \times f_{k}^{r s} \right)
+\\
+&= \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}} \left\{ \left[ \sum_{a \in A} \delta_{ak}^{rs} \cdot t_a(x_a) \right] \times f_{k}^{r s} \right \}
+\\
+&= \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}} \sum_{a \in A} \delta_{ak}^{rs} \cdot t_a(x_a) \cdot  f_{k}^{r s}
+\\
+&= \sum_{a \in A} t_a(x_a) \left[\sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{r s}} \delta_{ak}^{rs} \cdot t_a(x_a) \right]
+\\
+&= \sum_{a \in A} \left[ t_a(x_a) \cdot x_a \right]
+\end{align*}
 $$
 
 ### 1.2 System Optimum Formulation
@@ -178,13 +188,15 @@ After building a new road, the total travel time could be increased. Try to avoi
 
 ### 4. DUE Problem with Elastic Demand
 
-**Assumption:** The travel demand (i.e., trip rate) from origin $r$ to destination $s$, $q_{rs}$, is a decreasing function of the travel time/cost from the origin to the destination denoted by $u_{rs}$
+Previous DUE assume the trip rate between every origin and every destination is **fixed and known**.
+
+**Assumption:** The travel demand (i.e., trip rate) from origin $r$ to destination $s$, $q_{rs}$, is a function (generally is a **decreasing function**) of the travel time/cost from the origin to the destination denoted by $u_{rs}$
 $$
 q_{rs} = D_{rs}(u_{rs}),
 \qquad
 u_{rs} = D^{-1}_{rs}(q_{rs}) \ (\text{inverse function})
 $$
-where $q_{rs}$ usually is a decrease function with respect to $u_{rs}$.
+where $u_{rs}$ is the minimum travel time (i.e., shortest path travel time/cost) between $r$ and $s$.
 
 ### 4.1 Formulation
 
@@ -213,7 +225,7 @@ $$
 \begin{array}{rl}
 f_k^{rs} (c_k^{rs} - u_{rs}) = 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
 c_k^{rs} - u_{rs} \geq 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
-q_{rs} \left(u_{rs} - D_{rs}^{-1}(q_{rs}) \right) = 0, & \forall r \in R, \ \forall s \in S \\
+q_{rs} \left[u_{rs} - D_{rs}^{-1}(q_{rs}) \right] = 0, & \forall r \in R, \ \forall s \in S \\
 u_{rs} - D_{rs}^{-1}(q_{rs}) \geq 0, & \forall r \in R, \ \forall s \in S \\
 \displaystyle \sum_{k \in K_{rs}} f_{k}^{rs} = q_{rs}, & \forall r \in R, \ \forall s \in S \\
  f_{k}^{rs} \geq 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
@@ -242,24 +254,25 @@ $$
 z(\boldsymbol{x}, \boldsymbol{q})
 &= \sum_{a \in A} \int_{0}^{x_{a}} t_{a}(\omega) \, \mathrm{d} \omega-\sum_{r \in R} \sum_{s \in S} \left[\int_{0}^{\bar{q}_{r s}} D^{-1}(\omega) \, \mathrm{d} \omega-\int_{\bar{q}_{r s}-q_{r s}}^{0} D_{r s}^{-1} (\bar{q}_{r s}-v) \, \mathrm{d} (\bar{q}_{r s}-v) \right]
 \\
-&=\sum_{a \in A} \int_{0}^{x_{a}} t_{a}(\omega) \, \mathrm{d} \omega-\sum_{r \in R} \sum_{s \in S} \left[\int_{0}^{\bar{q}_{r s}} D^{-1}(\omega) \, \mathrm{d} \omega-\int_{0}^{\bar{q}_{r s}-q_{r s}} D_{r s}^{-1}\left(\bar{q}_{r s}-v\right) \, \mathrm{d} v\right]
+&=\sum_{a \in A} \int_{0}^{x_{a}} t_{a}(\omega) \, \mathrm{d} \omega
+  - \sum_{r \in R} \sum_{s \in S} \left[\int_{0}^{\bar{q}_{r s}} D^{-1}(\omega) \, \mathrm{d} \omega-\int_{0}^{\bar{q}_{r s}-q_{r s}} D_{r s}^{-1}\left(\bar{q}_{r s}-v\right) \, \mathrm{d} v\right]
 \\
-&=\sum_{a \in A} \int_{0}^{x_{a}} t_{a}(\omega) \, \mathrm{d} \omega+\int_{0}^{\bar{q}_{r s}-q_{r s}} D_{r s}^{-1} \left(\bar{q}_{r s}-v\right) \, \mathrm{d} v-\sum_{r \in R} \sum_{s \in S} \left[\int_{0}^{\bar{q}_{r s}} D^{-1}(\omega) \, \mathrm{d} \omega \right]
+&=\sum_{a \in A} \int_{0}^{x_{a}} t_{a}(\omega) \, \mathrm{d} \omega
+  + \sum_{r \in R} \sum_{s \in S} \int_{0}^{\bar{q}_{r s}-q_{r s}} D_{r s}^{-1} \left(\bar{q}_{r s}-v\right) \, \mathrm{d} v
+  - \sum_{r \in R} \sum_{s \in S} \left[\int_{0}^{\bar{q}_{r s}} D^{-1}(\omega) \, \mathrm{d} \omega \right]
 \end{align*}
 $$
 
-**Excess-demand function** is defined as:
+By introducing **excess-demand function**, defined as:
 $$
 W_{rs}(e_{rs}) = D^{-1}_{rs} (\bar{q}_{rs} - e_{rs})
 $$
-
-Formulation:
-
+Then, we will have the following **formulations**:
 $$
 \begin{array}{rll}
 \min z_1(\boldsymbol{x}, e)
 = & \displaystyle \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
-- \int_0^{e_{rs}} W_{rs} (v) \ \mathrm{d} v
+  + \sum_{r \in R} \sum_{s \in S} \int_0^{e_{rs}} W_{rs} (v) \ \mathrm{d} v
 \\
 \text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} f_{k}^{rs} \delta_{ak}^{rs}, & \forall a \in A
 \\
@@ -271,6 +284,8 @@ $$
 & e_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
 \end{array}
 $$
+
+It can be regarded as by intrducing a **directly dummy link** between every O-D pairs with travel time function (excess-demand function): $W_{rs}(e_{rs}) = D^{-1}_{rs} (\bar{q}_{rs} - e_{rs})$.
 
 **Conclusion:** Any algorithms that can solve the DUE problem with fixed demand can be directly used to solve the DUE problem with elastic demand based on the reformulated network with dummy links.
 

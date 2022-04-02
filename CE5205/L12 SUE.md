@@ -201,20 +201,24 @@ f^{*rs}_k \geq 0,
   & \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
 \end{array}$$
 
-Then, we can get
-$$
-\begin{align*}
-& \frac{f^{*rs}_{k}}{q_{rs}} = \frac{\exp(-\theta \, C_{k}^{*rs})}{\displaystyle \sum_{l \in K^{rs}} \exp(-\theta \, C_l^{*rs})}
-\\
-& \nu_{k}^{*rs} = 0
-\end{align*}
-$$
-
 where:
 $$
 \frac{\partial z(\boldsymbol{f})}{f^{rs}_k}
 = \frac{1}{\theta} \ln (f_{k}^{rs}) + \sum_{a \in A} t_a (x_a) \ \delta^{rs}_{ak}
 = \frac{1}{\theta} \ln (f_{k}^{rs}) + c_k^{rs}
+$$
+
+Because $f_k^{*rs} \neq 0$, thus, $\nu_{k}^{*rs} = 0$.
+
+Then, we can get
+$$
+f^{*rs}_{k} = \exp(-\theta \, c_{k}^{*rs}) \cdot \exp(-\theta \, u_{rs}^{*}),
+\quad \forall k \in K_{rs}, \ \forall \ r \in R, \ \forall \ s \in S
+$$
+
+Thus, we have the SUE principle:
+$$
+\frac{f^{*rs}_{k}}{q_{rs}} = \frac{\exp(-\theta \, c_{k}^{*rs})}{\displaystyle \sum_{l \in K_{rs}} \exp(-\theta \, c_l^{*rs})}
 $$
 
 ## 4. Stochastic User Equilibrium Loading Methods
@@ -257,6 +261,7 @@ and $t_a$ is a fixed value.
 $$
 x_a^n = \frac{1}{n} \big[(n-1) x_a^{n-1} + X_a^n \big], \quad \forall a \in A
 $$
+**Note** that when $n=1$, $x_a^n = X_a^n$
 
 **Step 4: (Stopping test)** Let maximum relative error
 $$

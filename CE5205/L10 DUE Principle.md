@@ -267,9 +267,9 @@ f^{*rs}_k \geq 0,
 
 Then, we can get
 $$\begin{array}{lr}
-  \nu^{*rs}_k =  c^{*rs}_k - u^{*rs}_k \\
-  \nu^{*rs}_k + u^{*rs}_k = c^{*rs}_k \geq u^{*rs}_k \\
-  (c^{*rs}_k - u^{*rs}_k) f^{*rs}_k = 0
+  \nu^{*rs}_k =  c^{*rs}_k - u^{*}_{rs} \\
+  \nu^{*rs}_k + u^{*rs}_k = c^{*rs}_k \geq u^{*}_{rs} \\
+  (c^{*rs}_k - u^{*}_{rs}) f^{*rs}_k = 0
 \end{array}$$
 
 where:
