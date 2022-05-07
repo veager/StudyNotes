@@ -126,8 +126,8 @@ where $n$ is the total number of paths in the network.
 The probit-based SUE conditions can be expressed by
 $$
 f_{k}^{rs} = q_{rs} \Pr \big(c_{k}^{rs}(\boldsymbol{f}) + \xi_{k}^{rs} \leq c_{l}^{rs}(\boldsymbol{f}) + \xi_{l}^{rs},
-\quad \ \forall \ l \neq k, l \in K_{rs} \big)
-\forall k \in K_{rs}, \forall r \in R, \forall s \in S
+\ \forall \ l \neq k, l \in K_{rs} \big)
+\quad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
 $$
 and this model doesn't have a analytical expression.
 
@@ -246,6 +246,15 @@ $$
 and $t_a$ is a fixed value.
 
 ### 4.2 Logit-based SUE Loading Method
+
+$$
+f^{rs}_k = q^{rs} \cdot \frac{
+    \exp \big[-\theta \,  c_{k}^{rs}(\boldsymbol{f}) \big]
+  }{
+    \displaystyle \sum_{l \in K_{rs}} \exp \big[-\theta \,  c_{l}^{rs}(\boldsymbol{f}) \big]
+  }
+\qquad \forall k \in K_{rs}, \forall r \in R, \forall s \in S
+$$
 
 ### 4.3 Probit-based SUE Loading Method
 

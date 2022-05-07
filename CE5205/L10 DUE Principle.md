@@ -106,9 +106,41 @@ $$
 \end{cases}
 $$
 
+Example : give some pahtes from a traffic networks
+$$
+\begin{array}{rccl}
+1 \to 2 & f^{12}_1 & : & 1 \overset{a=1}{\longrightarrow} 2 \\
+        & f^{12}_2 & : & 1 \overset{a=2}{\longrightarrow} 3 \overset{a=4}{\longrightarrow} 4 \overset{a=3}{\longrightarrow} 2 \\
+1 \to 6 & f^{16}_1 & : & 1 \overset{a=2}{\longrightarrow} 3 \overset{a=4}{\longrightarrow} 4 \overset{a=7}{\longrightarrow} 6 \\
+5 \to 2 & f^{52}_1 & : & 5 \overset{a=5}{\longrightarrow} 3 \overset{a=4}{\longrightarrow} 4 \overset{a=3}{\longrightarrow} 2 \\
+5 \to 6 & f^{56}_1 & : & 5 \overset{a=6}{\longrightarrow} 6 \\
+        & f^{56}_2 & : & 5 \overset{a=5}{\longrightarrow} 3 \overset{a=4}{\longrightarrow} 4 \overset{a=7}{\longrightarrow} 6 \\      
+\end{array}
+$$
+
+The link/path incidence matrix is:
+$$
+\Delta = \big[\delta_{ak}^{rs}\big]_{7\times6}
+= \begin{array}{c|cccccc}
+a & f^{12}_1 & f^{12}_2 & f^{16}_1 & f^{52}_1 & f^{56}_1 & f^{56}_2 \\ \hline
+1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+2 & 0 & 1 & 1 & 0 & 0 & 0 \\
+3 & 0 & 1 & 0 & 1 & 0 & 0 \\
+4 & 0 & 1 & 1 & 1 & 0 & 1 \\
+5 & 0 & 0 & 0 & 1 & 0 & 1 \\
+6 & 0 & 0 & 0 & 0 & 1 & 0 \\
+7 & 0 & 0 & 1 & 0 & 0 & 1 \\
+\end{array}
+$$
+
 **Traffic flow on path** $k$ from origin $r$ to destination $s$:
 $$
 f_{k}^{rs}, \quad \forall \ k \in K_{rs}, \forall \ r \in R, \forall \ s \in S
+$$
+
+Example: vector representation:
+$$
+\boldsymbol{f} = \big[f^{12}_1, \ f^{12}_2, \ f^{16}_1, \ f^{52}_1, \ f^{56}_1, \ f^{56}_2 \big]^{\top}
 $$
 
 **Flow conservation equations**
@@ -131,12 +163,22 @@ x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f
 \quad \forall \ a \in A
 $$
 
+Matrix representation:
+$$
+\boldsymbol{x} = \Delta \boldsymbol{f}
+$$
+
 ### 4.4 Path Travel Time Functions
 
 **Travel time function of a path** is defined as sum of travel times of all links defining the path
 $$
 c_k^{rs} = \sum_{a \in A} \delta_{ak}^{rs} \cdot t_a(x_a),
 \quad \forall \ k \in K_{rs}, \forall \ r \in R, \forall \ s \in S
+$$
+
+Matrix representation:
+$$
+\boldsymbol{c} = \Delta^{\top} \boldsymbol{t}
 $$
 
 ### 4.5 Mathematical Formulation of DUE
@@ -175,10 +217,10 @@ $$
 \begin{array}{rll}
 \displaystyle \min_{\boldsymbol{x}} z(\boldsymbol{x}) = & \displaystyle \sum_{a \in A}\int_0^{x_a} t_a(\omega) \ \mathrm{d}\omega
 \\
-\text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs},
+\text{s.t.} \quad & x_a = \sum \limits_{r \in R} \sum \limits_{s \in S} \sum \limits_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs},
 & \forall \ a \in A
 \\
-& \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
+& \sum \limits_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
 \\
 & \displaystyle f_{k}^{rs} \geq 0 \ ,
@@ -216,7 +258,6 @@ $$
 \end{align*}
 $$
 
-
 ### 5.2 Equivalent Fomulation with respect to Path Flows
 
 Fomulation of $z(\boldsymbol{f})$ in terms of **path flows** $f^{rs}_k$. Equivalence with DUE conditions:
@@ -228,7 +269,7 @@ $$
     } \delta_{ak}^{rs} \cdot f_{k}^{rs} }
 t_a(\omega) \ \mathrm{d} \omega
 \\
-\text{s.t.} \quad & \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
+\text{s.t.} \quad & \sum \limits_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
 \\
 & \displaystyle f_{k}^{rs} \geq 0 \ ,
@@ -265,19 +306,19 @@ f^{*rs}_k \geq 0,
   & \forall \ r \in R, \ \forall \ s \in S
 \end{array}$$
 
-Then, we can get
-$$\begin{array}{lr}
-  \nu^{*rs}_k =  c^{*rs}_k - u^{*}_{rs} \\
-  \nu^{*rs}_k + u^{*rs}_k = c^{*rs}_k \geq u^{*}_{rs} \\
-  (c^{*rs}_k - u^{*}_{rs}) f^{*rs}_k = 0
-\end{array}$$
-
 where:
 $$
 \frac{\partial z(\boldsymbol{f^*})}{f^{*rs}_k}
 = \sum_{a \in A} t_a (x_a^*) \ \delta^{rs}_{ak}
 = c^{*rs}_k
 $$
+
+Then, we can get
+$$\begin{array}{lr}
+  \nu^{*rs}_k =  c^{*rs}_k - u^{*}_{rs} \\
+  \nu^{*rs}_k + u^{*rs}_k = c^{*rs}_k \geq u^{*}_{rs} \\
+  (c^{*rs}_k - u^{*}_{rs}) f^{*rs}_k = 0
+\end{array}$$
 
 ### 5.4 Situations of Solution
 
@@ -312,17 +353,40 @@ $$
   \vdots   \\
   \sum_{a \in A} t_a(x_a) \, \delta_{ak}^{rs}\\
   \vdots   \\
-\end{bmatrix}
+\end{bmatrix}_{|(r,s,k)| \times 1}
 $$
 Where a set $(r,s,k)$ indicates a unique column index of the vector $\nabla z(\boldsymbol{f})$. Then, the $\big[(r,s,k), (r',s',k') \big]$ entry of Hessian matrix $\nabla^2 z(\boldsymbol{x})$ is:
 
 $$
-\frac{\partial}{\partial f^{r's'}_{k'}} \frac{\partial z(\boldsymbol{f})}{\partial f^{rs}_k}
+\begin{align*}
+\frac{\partial^2 z(\boldsymbol{f})}{\partial f^{rs}_k \, \partial f^{r's'}_{k'}}
+&= \frac{\partial}{\partial f^{r's'}_{k'}} \left(\frac{\partial z(\boldsymbol{f})}{\partial f^{rs}_k}\right)
 = \frac{\partial}{\partial f^{r's'}_{k'}} \left[ \sum_{a \in A} t_a(x_a) \, \delta_{ak}^{rs} \right]
-= \sum_{a \in A} \delta_{ak}^{rs} \left[\frac{\partial \, t_a(x_a)}{\partial f^{r's'}_{k'}} \right]
+\\
+& = \sum_{a \in A} \delta_{ak}^{rs} \left[\frac{\partial \, t_a(x_a)}{\partial f^{r's'}_{k'}} \right]
 = \sum_{a \in A} \delta_{ak}^{rs} \, \delta_{ak'}^{r's'} t_{a}^{\prime}(x_a)
+\end{align*}
 $$
 Thus, we can get $\nabla^2 z(\boldsymbol{x})$ is a symmetric matrix, however, we can not guarantee Hessian matrix $\nabla^2 z(\boldsymbol{x})$ always is positive definite.
+
+The matrix representation of Hessian matrix $\nabla^2 z(\boldsymbol{x})$ as:
+$$
+\nabla^2 z(\boldsymbol{x}) = \Delta^{\top} \Delta^{*}
+\quad \text{where} \quad
+\Delta^{*} = \Delta \odot \big[\nabla\boldsymbol{t}(\boldsymbol{x}), \nabla\boldsymbol{t}(\boldsymbol{x}), \cdots, \nabla\boldsymbol{t}(\boldsymbol{x}) \big]_{|A| \times |(r,s,k)|}
+$$
+
+where $\odot$ reprents element-wise product (Hadamard product) and denote $\nabla\boldsymbol{t}(\boldsymbol{x})$ is
+$$
+\nabla\boldsymbol{t}(\boldsymbol{x}) = \begin{bmatrix}
+t_1'(x_1) \\
+t_2'(x_2) \\
+\cdots \\
+t_a'(x_a) \\
+\cdots \\
+\end{bmatrix}_{|A| \times 1}
+$$
+
 
 ## 6. Heuristic Equilibration Techniques
 

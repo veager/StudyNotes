@@ -36,12 +36,12 @@ $$
 A Convex Programming Model
 $$
 \begin{array}{rll}
-\displaystyle \min_{\boldsymbol{x}} \tilde{z}(\boldsymbol{x}) =& \displaystyle \sum_{a \in A} x_{a} \cdot t_{a} \left(x_{a}\right)
+\displaystyle \min_{\boldsymbol{x}} \tilde{z}(\boldsymbol{x}) =& \sum \limits_{a \in A} x_{a} \cdot t_{a} \left(x_{a}\right)
 \\
-\text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs},
+\text{s.t.} \quad & x_a = \sum \limits_{r \in R} \sum \limits_{s \in S} \sum \limits_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs},
 & \forall \ a \in A
 \\
-& \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
+& \sum \limits_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
 \\
 & \displaystyle f_{k}^{rs} \geq 0 \ ,
@@ -115,7 +115,7 @@ $$
 with constraints:
 $$
 \begin{array}{ll}
-\displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A
+x_a = \sum \limits_{r \in R} \sum \limits_{s \in S} \sum \limits_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A
 \\
 \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
 & \forall r \in R, \ \forall s \in S
@@ -188,37 +188,79 @@ After building a new road, the total travel time could be increased. Try to avoi
 
 ### 4. DUE Problem with Elastic Demand
 
-Previous DUE assume the trip rate between every origin and every destination is **fixed and known**.
+**Assumption:**
 
-**Assumption:** The travel demand (i.e., trip rate) from origin $r$ to destination $s$, $q_{rs}$, is a function (generally is a **decreasing function**) of the travel time/cost from the origin to the destination denoted by $u_{rs}$
-$$
-q_{rs} = D_{rs}(u_{rs}),
-\qquad
-u_{rs} = D^{-1}_{rs}(q_{rs}) \ (\text{inverse function})
-$$
-where $u_{rs}$ is the minimum travel time (i.e., shortest path travel time/cost) between $r$ and $s$.
+- Previous DUE (Beckmann's model) assume the trip rate between every origin and every destination is **fixed and known**.
+
+- **Travel demand function:** The travel demand (i.e., trip rate) from origin $r$ to destination $s$, $q_{rs}$, is a function (generally is a **monotonically decreasing function**, or at least nonincreasing)) of the travel time/cost from the origin to the destination denoted by $u_{rs}$
+
+  $$
+  q_{rs} = D_{rs}(u_{rs}),
+  \qquad
+  u_{rs} = D^{-1}_{rs}(q_{rs}) \ (\text{inverse function})
+  $$
+
+  where $u_{rs}$ is the minimum travel time (i.e., shortest path travel time/cost) between $r$ and $s$.
 
 ### 4.1 Formulation
 
-**Strictly convex programming model**
+- **Strictly convex programming model**
+
+- $q_{rs}$ is a **variable** in this formulation, rather than a constant.
+
 $$
 \begin{array}{rll}
 \min z(\boldsymbol{x}, \boldsymbol{q})
 = & \displaystyle \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
 - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
 \\
-\text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A
+\text{s.t.} \quad & x_a = \sum \limits_{r \in R} \sum \limits_{s \in S} \sum \limits_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A
 \\
-&\displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
+& \sum \limits_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
   & \forall r \in R, \ \forall s \in S
 \\
-& \displaystyle f_{k}^{rs} \geq 0 \ ,
+& f_{k}^{rs} \geq 0 \ ,
   & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S
 \\
 & q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
 \end{array}
 $$
+
 The mode has unique solution in terms of link flow $\{ x_a, a \in A \}$ and O-D demand $\{q_{rs}, r \in R, s \in S \}$
+
+Transform the formulation in terms of path flow $f^{rs}_{k}$ and travel demand $q_{rs}$ :
+$$
+\begin{align*}
+& \min z(\boldsymbol{f}, \boldsymbol{q})
+  = \displaystyle \sum_{a \in A} \int_0^{x_a(\boldsymbol{f})} t_a (\omega) \, \mathrm{d} \omega
+  - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
+\\
+& \quad \ \ \ \begin{array}{lll}
+  \text{s.t.} \quad & \sum \limits_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
+    & \forall r \in R, \ \forall s \in S \\
+  & f_{k}^{rs} \geq 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
+  & q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
+\end{array}
+\end{align*}
+$$
+
+where $x_a(\boldsymbol{f})$:
+$$
+x_a(\boldsymbol{f}) = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \, f_{k}^{rs}
+$$
+
+#### KKT conditions
+
+The Lagrangian Funtion is:
+$$
+\begin{align*}
+L(\boldsymbol{f}, \boldsymbol{q}, \boldsymbol{u}, \boldsymbol{\mu}, \boldsymbol{\lambda})
+\ = \ & z(\boldsymbol{f}, \boldsymbol{q}) + \sum_{r} \sum_{s} u_{rs} \left( \sum_{k \in K_{rs}}f_{k}^{rs} - q_{rs} \right) + \\
+& \sum_{r} \sum_{s} \sum_{k} \big[\mu^{rs}_{k} \cdot (-f_{k}^{rs}) \big] + \sum_{r} \sum_{s} \big[\lambda_{rs} \cdot (-q_{rs}) \big]
+\end{align*}
+$$
+
+where $\boldsymbol{u}$, $\boldsymbol{\mu} \geq \boldsymbol{0}$, $\boldsymbol{\lambda} \geq \boldsymbol{0}$ are Lagrangian multipliers.
 
 The optimal solution satisfying the following DUE conditions:
 $$
@@ -233,22 +275,150 @@ q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
 \end{array}
 $$
 
-### 4.2 Solution by Excess-Demand Network Representation
+#### Uniqueness Conditions
+
+The objective function
+$$
+z(\boldsymbol{x}, \boldsymbol{q}) = z_1(\boldsymbol{x}) - z_2(\boldsymbol{q})
+$$
+is the sum of two strictly convex functions. Thus, z(\boldsymbol{x}, \boldsymbol{q}) is strictly convex.
+
+### 4.2 Solution Algorithm
 
 $$
 \begin{align*}
-\min z(\boldsymbol{x}, \boldsymbol{q})
+& \min z(\boldsymbol{x}, \boldsymbol{q})
+  = \displaystyle \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
+  - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
+\\
+& \qquad \quad \begin{array}{lll}
+  \text{s.t.} \quad & \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A \\
+  & \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs}, & \forall r \in R, \ \forall s \in S \\
+  & q_{rs} \leq \bar{q}_{rs}, & \forall r \in R, \ \forall s \in S \\
+  & \displaystyle f_{k}^{rs} \geq 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
+  & q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
+\end{array}
+\end{align*}
+$$
+
+where $\bar{q}_{rs}$ is the upper bound of travel demand $q_{rs}$. This constraint is added for compu tational reasons.
+
+Transform the formulation in terms of path flow $f^{rs}_{k}$ :
+$$
+\begin{align*}
+& \min z(\boldsymbol{f})
+  = \displaystyle \sum_{a \in A} \int_0^{x_a(\boldsymbol{f})} t_a (\omega) \, \mathrm{d} \omega
+  - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}(\boldsymbol{f}^{rs})} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
+\\
+& \quad \ \ \ \begin{array}{lll}
+  \text{s.t.} \quad & \displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} \leq \bar{q}_{rs}, & \forall r \in R, \ \forall s \in S \\
+  & \displaystyle f_{k}^{rs} \geq 0, & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S \\
+  & q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
+\end{array}
+\end{align*}
+$$
+
+where $x_a(\boldsymbol{f})$ and $q_{rs}(\boldsymbol{f^{rs})}$:
+$$
+\begin{align*}
+x_a(\boldsymbol{f}) & = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \, f_{k}^{rs}\\
+q_{rs}(\boldsymbol{f}^{rs}) &= \sum_{k \in K_{rs}}f_{k}^{rs}
+\end{align*}
+$$
+
+**Step 0 :** *Initialization.* Find an initial feasible flow pattern $\big\{ x_a^{(0)} \big\}$, $\big\{ q_{rs}^{(0)} \big\}$. Set $n:= 1$.
+
+**Step 1:** *Update.* Set $t_a^{(n)}=t_a(x_a^{(n)}), \forall \, a$ ; compute $D_{rs}^{-1}(q_{rs}^{(n)}), \forall \, r, s$
+
+**Step 2:** *Direction finding.* For each O-D pair $r\text{-}s$:
+
+**Step 2.1:** Compute the shortest path, $m$, between each based on $\big\{ t_a^{(n)} \big\}$. Then get:
+$$
+c_{m}^{rs^{(n)}} = \min_{\forall \, k} \left\{c_k^{rs^{(n)}} \right\}
+$$
+where $c_{m}^{rs^{(n)}}$ is the minimal travel time of the O-D pair $r\text{-}s$ at the $n$th iteration
+
+**Step 2.2:** Execute the assignment rule according to:
+$$
+\begin{align*}
+& \text{If } \ c_{m}^{rs^{(n)}} < D^{-1}(q_{rs}^{(n)}), \quad
+  \text{ set } \ g^{rs^{(n)}}_{m} = \bar{q}_{rs}
+  \text{ and } \ g^{rs^{(n)}}_{k}, \ \forall \, k \neq m
+\\
+& \text{If } \ c_{m}^{rs^{(n)}} \geq D^{-1}(q_{rs}^{(n)}), \quad
+  \text{ set } \ g^{rs^{(n)}}_{k} = 0, \ \forall \, k
+\end{align*}
+$$
+where $g^{rs^{(n)}}_{k}$ are auxiliary **path flow**
+
+This assignment yields an auxiliary flow pattern: **link flow** $\big\{ y_a^{n} \big\}$ and **travel demand** $\big\{ v_{rs}^{n} \big\}$
+$$
+\begin{array}{ll}
+y_a^{(n)} = \sum \limits_{r} \sum \limits_{s} \sum \limits_{k} g^{rs^{(n)}}_{k} \, \delta_{ak}^{rs},
+  & \forall \, a
+\\
+v_{rs}^{(n)} = \sum \limits_{k} g_{k}^{rs^{(n)}},
+  & \forall \, r,s
+\end{array}
+$$
+
+**Step 3:** *Move size.* Find $\alpha_n$ that solves program
+$$
+\begin{align*}
+& \min_{\alpha} z(\alpha)
+  = \displaystyle \sum_{a \in A} \int_0^{x_a^{(n)} + \alpha \left(y_{a}^{(n)} - x_{a}^{(n)} \right)} t_a (\omega) \, \mathrm{d} \omega
+  - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}^{(n)} + \alpha \left(v_{rs}^{(n)} - q_{rs}^{(n)}\right)} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
+\\
+& \quad \text{s.t.} \qquad \quad 0 \leq \alpha \leq 1
+\end{align*}
+$$
+
+**Step 4:** *Flow update.* Find $\big\{ x_a^{(n+1)} \big\}$ and $\big\{ q_{rs}^{(n+1)} \big\}$
+$$
+\begin{align*}
+x_a^{(n+1)} &= x_a^{(n)} + \alpha_n (y_{a}^{(n)} - x_{a}^{(n)}), \quad \forall \, a
+\\
+q_{rs}^{(n+1)} &= q_{rs}^{(n)} + \alpha_n (v_{rs}^{(n)} - q_{rs}^{(n)}), \quad \ \forall \, r,s
+\end{align*}
+$$
+
+**Step 5:** *Convergence criterion.* If the criterion
+$$
+\sum_{r} \sum_{s} \frac{ \left|D^{-1}_{rs}(q_{rs}^{(n)} )- u_{rs}^{(n)} \right|}{u_{rs}^{(n)}} + \sum_{r} \sum_{s} \frac{ \left|u_{rs}^{(n)} - u_{rs}^{(n-1)} \right|}{u_{rs}^{(n)}} \leq \varepsilon
+$$
+is satisfied, terminate.
+
+Otherwise, set $n := n + 1$ and go to **Step 1**.
+
+
+## 5. Solution By Network Representation
+
+### 5.1 The Zero-Cost Overflow Formulation
+
+### 5.2 Excess-Demand Formulation
+
+#### (1) Excess Demand
+
+By introdcing the **upper bound** of travel demand $\bar{q}_{rs}$, namely, $\bar{q}_{rs} = D_{rs}(u_{rs}=0)$. Then the objective function $z(\boldsymbol{x}, \boldsymbol{q})$ can be rewritten as:
+
+$$
+\begin{align*}
+z(\boldsymbol{x}, \boldsymbol{q})
 &= \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
 - \sum_{r \in R} \sum_{s \in S} \int_0^{q_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega
+\\
+&= \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
+- \sum_{r \in R} \sum_{s \in S} \left[ \int_0^{q_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega + \int_{q_{rs}}^{\bar{q}_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega \right]
 \\
 &= \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
 - \sum_{r \in R} \sum_{s \in S} \left[ \int_0^{\bar{q}_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega - \int_{q_{rs}}^{\bar{q}_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega \right]
 \end{align*}
 $$
 
-where $\bar{q}_{rs}$ is the **upper bound** of travel demand from origin $r$ to destination $s$, namely, $\bar{q}_{rs} = D_{rs}(u_{rs}=0.0)$. And $\displaystyle \int_0^{\bar{q}_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega$ is a constant item.
+where $\displaystyle \int_0^{\bar{q}_{rs}} D_{rs}^{-1} (\omega) \ \mathrm{d} \omega$ is a constant item.
 
-Let $v = \bar{q}_{rs} - \omega$, we have:
+Then, by introducing the **excess demand** with a simple change of variable : $e_{rs} = \bar{q}_{rs} - q_{rs}$. The new variable of integration is $v = \bar{q}_{rs} - \omega$, then we will have:
+
 $$
 \begin{align*}
 z(\boldsymbol{x}, \boldsymbol{q})
@@ -267,6 +437,9 @@ By introducing **excess-demand function**, defined as:
 $$
 W_{rs}(e_{rs}) = D^{-1}_{rs} (\bar{q}_{rs} - e_{rs})
 $$
+
+#### (2) Formulation
+
 Then, we will have the following **formulations**:
 $$
 \begin{array}{rll}
@@ -285,130 +458,8 @@ $$
 \end{array}
 $$
 
-It can be regarded as by intrducing a **directly dummy link** between every O-D pairs with travel time function (excess-demand function): $W_{rs}(e_{rs}) = D^{-1}_{rs} (\bar{q}_{rs} - e_{rs})$.
+It can be regarded as the **DUE formulation** by intrducing a **directly dummy link** between every O-D pairs with travel time function (excess-demand function): $W_{rs}(e_{rs}) = D^{-1}_{rs} (\bar{q}_{rs} - e_{rs})$.
 
-**Conclusion:** Any algorithms that can solve the DUE problem with fixed demand can be directly used to solve the DUE problem with elastic demand based on the reformulated network with dummy links.
+#### (3) Solutions
 
-## 5. Combined Trip Distribution and Traffic Assignment Model
-
-### 5.1 Formulation
-
-$$
-\begin{array}{rll}
-\min z(\boldsymbol{x}, \boldsymbol{q})
-= & \displaystyle \sum_{a \in A} \int_0^{x_a} t_a (\omega) \, \mathrm{d} \omega
-- \frac{1}{\beta} \sum_{r \in R} \sum_{s \in S} \big[ q_{rs} \times (\ln q_{rs} - 1) \big]
-\\
-\text{s.t.} \quad & \displaystyle \sum_{s \in S} q_{rs} = D_r, & r \in R
-\\
-& \displaystyle \sum_{r \in R} q_{rs} = D_s, & s \in S
-\\
-& \displaystyle x_a = \sum_{r \in R} \sum_{s \in S} \sum_{k \in K_{rs}} \delta_{ak}^{rs} \cdot f_{k}^{rs}, & \forall a \in A
-\\
-&\displaystyle \sum_{k \in K_{rs}}f_{k}^{rs} = q_{rs} \ ,
-  & \forall r \in R, \ \forall s \in S
-\\
-& \displaystyle f_{k}^{rs} \geq 0 \ ,
-  & \forall k \in K_{rs}, \ \forall r \in R, \ \forall s \in S
-\\
-& q_{rs} \geq 0, & \forall r \in R, \ \forall s \in S
-\end{array}
-$$
-
-- It is a strictly convex programming model
-
-- The optimal solution of the above model is unique.
-
-- The optimal link flow and trip distribution solution:
-$$
-\begin{align*}
-&x_a^{\text{DUE}}, \qquad \forall a \in A \\
-&q_{rs}^{\text{DUE}}, \qquad \forall r \in R, s \in S
-\end{align*}
-$$
-where $q_{rs}^{\text{DUE}} = \alpha_r \gamma_s \exp(-\beta c_{rs}^{\text{DUE}})$
-
-### 5.1 Proof using the KKT conditions
-
-The Lagrangian function is:
-$$
-L\left(\boldsymbol{x}, \boldsymbol{q}, \right)
-$$
-
-The derivatives of the Lagrangian function with respect to the O-D flow variable $q_{rs}$ are given by:
-$$
-\frac{1}{\beta} \, \ln q_{rs} + \mu_{rs} - \mu_r - \lambda_s =0, \quad \forall r \in R, \forall s \in S
-$$
-
-These equations imply that:
-$$
-\begin{align*}
-q_{rs} &= \exp \big[ -\beta (\mu_{rs} - \mu_r - \lambda_s) \big]
-\\
-&= \exp \big( -\beta \mu_{rs} \big) \cdot \exp \big( \beta \mu_r \big) \cdot \exp \big( \beta \lambda_s \big),
-\quad \forall r \in R, \forall s \in S
-\end{align*}
-$$
-
-When these expressions are substituted into the flow conservation constraints, the result is:
-$$
-\exp(\beta \mu_r) = \frac{O_r}{\displaystyle \sum_{s \in S} \exp \big[ -\beta \, (\mu_{rs} - \lambda_s) \big]}, \ \forall r \in R
-\qquad
-\exp(\beta \lambda_s) = \frac{D_s}{\displaystyle \sum_{r\in R} \exp \big[ -\beta \, (\mu_{rs} - \mu_r) \big]}, \ \forall s \in S
-$$
-
-According to UE condition:
-$$
-c_{rs}^{\text{DUE}} = \mu_{rs}, \quad \text{If} \ \  f_k^{rs}>0
-$$
-
-Using the above equations, trip distribution can be written as
-$$
-q_{rs}^{\text{DUE}} = \alpha_r \gamma_s \exp \left(-\beta \, c_{rs}^{\text{DUE}} \right)
-$$
-where $\alpha_r = O_r \, A_r$ and $\gamma_s = D_s \, B_s$
-
-$$
-A_r = \frac{1}{\displaystyle \sum_{s \in S} B_s D_s \exp \left(-\beta \, c_{rs}^{\text{DUE}} \right)},
-\qquad
-B_s = \frac{1}{\displaystyle \sum_{r \in R} A_r O_r \exp \left(-\beta \, c_{rs}^{\text{DUE}} \right)}
-$$
-
-### 5.2 Frank-Wolfe Method
-
-**Step 0: Initialization :** Find a feasible solution $\{ q_{rs}^{n}\}$, $\{x_{a}^{n}\}$. Set $n:=1$
-
-**Step 1: Travel time update :** Set $t_a^n = t_a(x_a^n)$
-
-**Step 2: Direction finding :**
-
-- a) Compute $\{u_{rs}^{n}\}$; Set $c_{rs}^n = u_{rs}^n + \frac{1}{\beta} \, \ln q_{rs}^n$ (Sheffi, 1985, p.p.189-197)
-
-- b) Solve **Hitchcock's transportation problem with** costs
-This yields with costs $\{c_{rs}^{n}\}$. This yields $\{v_{rs}^{n}\}$.
-
-- c) Assign $\{v_{rs}^n\}$ to the minimum paths identified in **a)**. This yields $\{y_a^n\}$.
-
-**Step 3: Move-size determination :** Find $x^{n}_{a}$ that solves:
-$$
-\min_{0 \leq \alpha_n \leq 1} \sum_a \int_0^{\textstyle x_{\alpha}^n + \alpha_n (y_{\alpha}^n - x_{\alpha}^n)} t_a (\omega) \, \mathrm{d} \, \omega +
-\frac{1}{\beta} \sum_{r \in R} \sum_{s \in S} \big[q_{rs}^n + \alpha_n (v_{rs}^n - q_{rs}^n) \big] \big\{ \ln \left[ q_{rs}^n + \alpha_n (v_{rs}^n - q_{rs}^n) \right] - 1 \big\}
-$$
-
-**Step 4: Flow update :** Set
-$$
-\begin{align*}
-x^{n+1}_{a} &= x^n_a + \alpha_a (y^n_a - x^n_a),
-\quad \forall \alpha \in R
-\\
-q^{n+1}_{rs} &= q^n_{rs} + \alpha_a (v^n_{rs} - q^n_{rs}), \quad \forall r \in R, \forall s \in S
-\end{align*}
-$$
-
-**Step 5: Convergence criterion :** If the stop criterion is fulfilled:
-$$
-\sum_{a \in A} \frac{\left| x_a^{n+1} - x_a^n\right|}{x_a^n} \leq \varepsilon
-$$
-then stop, and output the results $x_a^{n+1}$.
-
-Otherwise, set $n:=n+1$ and go to **step 1**.
+Any algorithms that can solve the DUE problem with fixed demand can be directly used to solve the DUE problem with elastic demand based on the reformulated network with dummy links.
