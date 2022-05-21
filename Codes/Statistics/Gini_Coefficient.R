@@ -60,6 +60,18 @@ sum(abs(res$u - lc.res$p))
 sum(abs(res$v - lc.res$L))
 
 
+# Example 2
+x <- c(1, 2, 3, 4, 5)  # income
+f <- c(1, 2, 3, 2, 1)  # population
+
+f <- c(1, 1, 1, 1, 1)  # equal income
+f <- c(0, 0, 0, 0, 1)  # equal income
+
+gini.coef(x, freq=f, norm=F)$gini
+gini.coef(x, freq=f, norm=TRUE)$gini
+Lc(x, n=f, plot=TRUE)
+
+
 
 # Example of computing Lorenz curve
 Lasym(x, n=f, interval=FALSE)
@@ -68,3 +80,9 @@ x = c(5, 10, 15, 15, 15, 20, 25)
 Lasym(x, interval=FALSE)
 Lasym(x, interval=TRUE)
 Lc(x, plot=TRUE)
+
+
+
+
+
+
